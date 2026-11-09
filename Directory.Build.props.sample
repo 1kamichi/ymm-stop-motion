@@ -1,0 +1,6 @@
+<Project>
+  <PropertyGroup>
+    <!-- YMM4 (YukkuriMovieMaker.exe があるフォルダ) のパスを指定してください。末尾の \ を忘れずに -->
+    <YMM4DirPath>D:\YMM4\</YMM4DirPath>
+  </PropertyGroup>
+</Project>

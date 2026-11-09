@@ -1,0 +1,71 @@
+<UserControl x:Class="YmmStopMotion.Views.FramesEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:YmmStopMotion.Views"
+             mc:Ignorable="d"
+             d:DesignWidth="360"
+             d:DataContext="{d:DesignInstance Type={x:Type local:FramesEditorViewModel}}">
+    <Grid AllowDrop="True" Background="Transparent" DragOver="Root_DragOver" Drop="Root_Drop">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="220"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="{Binding Summary}" TextWrapping="Wrap" Margin="0,0,0,4"/>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="26"/>
+            </Grid.ColumnDefinitions>
+
+            <ListBox Grid.Column="0"
+                     ItemsSource="{Binding Items}"
+                     SelectedIndex="{Binding SelectedIndex, Mode=TwoWay}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     VirtualizingPanel.IsVirtualizing="True"
+                     VirtualizingPanel.VirtualizationMode="Recycling">
+                <ListBox.InputBindings>
+                    <KeyBinding Key="Delete" Command="{Binding RemoveCommand}"/>
+                </ListBox.InputBindings>
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:FrameListItem}">
+                        <Grid ToolTip="{Binding Path}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="40"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Number}" HorizontalAlignment="Right" Margin="0,0,8,0" Opacity="0.6"/>
+                            <TextBlock Grid.Column="1" Text="{Binding FileName}" TextTrimming="CharacterEllipsis" Name="fileName"/>
+                        </Grid>
+                        <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Exists}" Value="False">
+                                <Setter TargetName="fileName" Property="TextDecorations" Value="Strikethrough"/>
+                                <Setter TargetName="fileName" Property="Opacity" Value="0.5"/>
+                            </DataTrigger>
+                        </DataTemplate.Triggers>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <StackPanel Grid.Column="1">
+                <Button Height="26" Content="▲" ToolTip="1つ上へ移動" Command="{Binding MoveUpCommand}"/>
+                <Button Height="26" Content="▼" ToolTip="1つ下へ移動" Command="{Binding MoveDownCommand}"/>
+                <Button Height="26" Content="✕" ToolTip="選択したコマを削除 (Delete)" Command="{Binding RemoveCommand}"/>
+            </StackPanel>
+        </Grid>
+
+        <UniformGrid Grid.Row="2" Columns="2" Margin="0,4,0,0">
+            <Button Margin="0,0,2,2" Height="26" Content="画像を追加..." ToolTip="画像ファイルを選んで、選択中のコマの後ろに追加します（複数選択可）" Command="{Binding AddFilesCommand}"/>
+            <Button Margin="2,0,0,2" Height="26" Content="フォルダから追加..." ToolTip="フォルダ内の画像をファイル名順にすべて追加します" Command="{Binding AddFolderCommand}"/>
+            <Button Margin="0,2,2,0" Height="26" Content="ファイル名順に並べ替え" ToolTip="IMG_2 → IMG_10 のように数字を数値として並べ替えます" Command="{Binding SortCommand}"/>
+            <Button Margin="2,2,0,0" Height="26" Content="すべて削除" Command="{Binding ClearCommand}"/>
+        </UniformGrid>
+
+        <Image Grid.Row="3" Source="{Binding Preview}" MaxHeight="160" Stretch="Uniform" Margin="0,6,0,0" HorizontalAlignment="Center"/>
+    </Grid>
+</UserControl>

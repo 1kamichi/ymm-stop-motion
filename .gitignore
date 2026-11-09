@@ -1,0 +1,25 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+artifacts/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Test results
+[Tt]est[Rr]esult*/
+
+# YMM4 のインストール先はローカル環境ごとに異なるためコミットしない
+Directory.Build.props
+
+# Rider / VS Code
+.idea/
+.vscode/

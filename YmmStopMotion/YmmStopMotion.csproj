@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<!-- YMM4 v4.47.0.0 以降は .NET 10 -->
+		<TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<UseWPF>true</UseWPF>
+		<RootNamespace>YmmStopMotion</RootNamespace>
+		<AssemblyName>YmmStopMotion</AssemblyName>
+		<Version>0.1.0</Version>
+
+		<!-- Pdb内にソースコードのフルパスを含めない -->
+		<RepoRoot>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\'))</RepoRoot>
+		<PathMap>$(RepoRoot)=.</PathMap>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<InternalsVisibleTo Include="YmmStopMotion.Tests" />
+	</ItemGroup>
+
+	<!-- YMM4 本体の DLL を参照する（Directory.Build.props の YMM4DirPath で場所を指定） -->
+	<ItemGroup>
+		<Reference Include="YukkuriMovieMaker.Controls">
+			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Controls.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="YukkuriMovieMaker.Plugin">
+			<HintPath>$(YMM4DirPath)YukkuriMovieMaker.Plugin.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="SharpGen.Runtime">
+			<HintPath>$(YMM4DirPath)SharpGen.Runtime.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="SharpGen.Runtime.COM">
+			<HintPath>$(YMM4DirPath)SharpGen.Runtime.COM.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Vortice.Direct2D1">
+			<HintPath>$(YMM4DirPath)Vortice.Direct2D1.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Vortice.DirectX">
+			<HintPath>$(YMM4DirPath)Vortice.DirectX.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+		<Reference Include="Vortice.Mathematics">
+			<HintPath>$(YMM4DirPath)Vortice.Mathematics.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+
+	<!-- ビルド後に YMM4 のプラグインフォルダへ dll をコピーする -->
+	<Target Name="CopyToYmm4PluginFolder" AfterTargets="Build" Condition="'$(YMM4DirPath)' != '' And Exists('$(YMM4DirPath)YukkuriMovieMaker.exe')">
+		<MakeDir Directories="$(YMM4DirPath)user\plugin\$(ProjectName)" />
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(YMM4DirPath)user\plugin\$(ProjectName)" />
+	</Target>
+</Project>
